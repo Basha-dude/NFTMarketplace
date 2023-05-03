@@ -48,6 +48,13 @@ describe("NFTMarketplace", function () {
           console.log("Initial Listing Price: ", listingPrice.toString());
           console.log("Expected Listing Price: ", ethers.utils.parseEther("0.0002"));
         })
+        it("should pass get listing price",async () => {
+          transaction = await nftMarketplace.getListingPrice()
+          expect( await nftMarketplace.getListingPrice()).to.equal(await nftMarketplace.listingPrice())
+          console.log("GETTING PRICE :",transaction)
+          console.log("RETURN LISTING  PRICE :",await nftMarketplace.listingPrice())
+        })
+        
       })
 
        describe("Failure", async () => {
@@ -55,20 +62,6 @@ describe("NFTMarketplace", function () {
           await expect(nftMarketplace.connect(addr1).updatingListingPrice(listingPrice)).to.be.revertedWith("only owner can change");
         });
       })
-       describe('Get listing price function', () => { 
-        let transaction
-        beforeEach(async ()=> {
-          transaction = await nftMarketplace.getListingPrice()
-          
-        }) 
-        it("should pass the get listing price",async () => {
-          expect( await nftMarketplace.getListingPrice()).to.equal(await nftMarketplace.listingPrice())
-          console.log("GETTING PRICE :",transaction)
-          console.log("RETURN LISTING  PRICE :",await nftMarketplace.listingPrice())
-
-        })
-
-       })
     })
   })
 
