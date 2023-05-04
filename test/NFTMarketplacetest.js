@@ -4,19 +4,20 @@ const { ethers } = require("hardhat");
 describe("NFTMarketplace", function () {
   let NFTMarketplace;
   let nftMarketplace;
-  let owner;
+  let addrs;
   let addr1;
   let addr2;
-  let addrs;
+  let owner;
+  let URI = "sample uri"
 
   beforeEach(async function () {
     [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
     NFTMarketplace = await ethers.getContractFactory("NFTMarketplace");
     nftMarketplace = await NFTMarketplace.deploy();
-    await nftMarketplace.deployed();
+
   });
 
-  describe("minting NFTs", () => {
+  describe("NFT Market place", () => {
    
       it('should pass the listing price', async () => {
         const initialListingPrice = await nftMarketplace.listingPrice();
@@ -63,6 +64,24 @@ describe("NFTMarketplace", function () {
         });
       })
     })
+  describe('Create Token ', () => { 
+    let transaction,result,price = ethers.utils.parseEther("1")
+    beforeEach(async () => {
+      transaction = await nftMarketplace.createToken(URI,price)
+      result = await transaction.wait()
+    
+    })
+    it("should create token",async () => {
+      expect (await nftMarketplace.newTokenId()).to.eq(1)
+      expect(await nftMarketplace.tokenURI(1)).to.equal(URI);
+      console.log("TOKEN URI:",await nftMarketplace.tokenURI(1))
+      console.log("URI:",URI)
+      expect(await nftMarketplace.balanceOf(owner.address)).to.equal(1);
+      console.log("BALANCE OF OWNER ADDRESS:",await nftMarketplace.balanceOf(owner.address))
+    
+    })
+    
+  })  
   })
 
 
